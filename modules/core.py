@@ -22,7 +22,7 @@ import time, string
 import irclib
 
 # Other modules in this folder.
-import botmath
+import botmath, commands
 
 # Handles the core module to the IRC bot and calls all other custom modules.
 class BotCore:
@@ -59,6 +59,11 @@ class BotCore:
     # Obtains the time for logging purposes.
     def logTime(self):
         return time.strftime("%H:%M:%S")
+
+    def reload(self):
+        reload(botmath)
+        reload(commands)
+        self.bot.reload_core(c, e, cmd.chan)
 
     # Records a line in the log.
     def record(self, message):
@@ -136,72 +141,4 @@ class BotCore:
 
     # Because messages can be commands, they're handled specially.
     def commands(self, c, e):
-        # Reads in all the relevant information for the commands.
-        msg      = e.arguments()[0]
-        msg_args = msg.split()
-        sender   = irclib.nm_to_n(e.source())
-        chan     = e.target()
-
-        # If the target of the message has the bot's name, it was a query.
-        if irclib.nm_to_n(chan) == c.get_nickname():
-            chan = sender
-
-        # Outputs the messages.
-        self.record("(" + chan + ") <" + sender + "> " + msg)
-
-        # Handles the commands.
-        if msg_args[0] == "," and len(msg_args) > 1 and sender in self.operators:
-            msg_args[1] = msg_args[1].lower()
-
-            # ** MESSGING COMMANDS ** #
-            # Sends a message in the current channel or query.
-            # syntax: , msg <message>
-            if msg_args[1] == "msg":
-                self.outmsg(c, chan, msg[6:])
-
-            # Sends a message to a given destination.
-            # syntax: , <destination> msg <message>
-            elif len(msg_args) > 2 and msg_args[2] == "msg":
-                self.outmsg(c, msg_args[1], msg[7 + len(msg_args[1]):])
-
-            # ** BASIC COMMANDS ** #
-            elif msg_args[1] == "time":
-                self.outmsg(c, chan, "My current local time is " + self.logTime())
-
-            # ** CONNECTION AND SYSTEM COMMANDS ** #
-            # Orders the bot to join a channel.
-            elif msg_args[1] == "join":
-                self.join(c, msg_args[2])
-
-            # Orders the bot to part a channel.
-            elif msg_args[1] == "part":
-                self.part(c, msg_args[2])
-
-            # Reloads this module without restarting the bot.
-            # syntax: , reload
-            elif msg_args[1] == "reload":
-                reload(botmath)
-                self.bot.reload_core(c, e, chan)
-
-            # Orders the bot to disconnect from the server.
-            # It will automatically attempt to reconnect.
-            # syntax: , reconnect
-            elif msg_args[1] == "reconnect":
-                self.bot.disconnect()
-
-            # Orders the bot to quit from IRC.
-            # syntax: , quit
-            elif msg_args[1] == "quit":
-                self.bot.die(self.version())
-
-            # The proper prefix without a recognized command gets an error.
-            else:
-                self.outmsg(c, chan, "I'm sorry, I don't know that command.")
-
-        # Anything with this prefix is handled in botmath.py
-        elif msg_args[0] == "~":
-            self.outmsg(c, chan, self.math.command(msg[2:]))
-
-        # Using the restricted prefix without being an operator gives an error.
-        elif msg_args[0] == ",":
-            self.outmsg(c, chan, "I'm sorry, you are not authorized.")
+        cmd = commands.Command(self, c, e)

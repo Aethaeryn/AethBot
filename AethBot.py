@@ -29,9 +29,15 @@ from modules import core
 # features are handled in individual modules, centered around core.py, so that
 # they can be reloaded while the bot is still running.
 class AethBot(ircbot.SingleServerIRCBot):
-    def __init__(self, nick="AethBot", name="AethBot", pw='', args=''):
+    def __init__(self,
+                 nick   = 'AethBot',
+                 name   = 'AethBot',
+                 server = 'irc.freenode.net',
+                 port   = 6667,
+                 pw     = '',
+                 args   = ''):
         # Instantiates from ircbot.py
-        ircbot.SingleServerIRCBot.__init__(self, [("irc.freenode.net", 6667, pw)], nick, name)
+        ircbot.SingleServerIRCBot.__init__(self, [(server, port, pw)], nick, name)
 
         # Sets up the core.py main bot code.
         self.args   = args
