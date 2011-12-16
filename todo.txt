@@ -1,0 +1,20 @@
+In general:
+ * Provide more extensive configuration system. Anything that is variable should go here.
+ * Use yaml configs.
+ * Put AethBot in multiple channels, adding #federation and #federation-dev
+ * Separate the irclogs into different files per channel, and queries.
+
+AethBot.py:
+ * Enable ssl. This may require rewriting it to get rid of ircbot dependency.
+ * This is probably preferable to get rid of the mess of inherited on_foobar functions.
+ * Find way to automatically run in the background on run. (GNU screen?)
+
+core.py:
+ * Put self.operators into a config file to read from, and include a check that the operator is logged in.
+ * Allow a way to modify stuff in the config files from the bot itself.
+
+botmath.py:
+ * This is old. Review how it works. Maybe (especially?) the debug main() thing.
+
+federation.py:
+ * Write code that makes it aware of Federation so that it can be used as an IRC bot to issue Federation moves.

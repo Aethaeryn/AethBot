@@ -1,0 +1,11 @@
+# Ignore the configuration file so that people don't accidentally upload their password.
+config
+
+# Ignore hidden files that aren't explicitly added.
+.*
+
+# Ignore compiled Python files.
+*.pyc
+
+# Ignore the IRC logs so that people don't accidentally upload their IRC logs.
+*.log
