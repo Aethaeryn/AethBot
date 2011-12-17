@@ -21,6 +21,10 @@ import irclib
 class Command():
     def __init__(self, core, c, e):
         # Reads in all the relevant information for the commands.
+        self.core     = core
+        self.c        = c
+        self.e        = e
+
         self.msg      = e.arguments()[0]
         self.msg_args = self.msg.split()
         self.sender   = irclib.nm_to_n(e.source())
@@ -31,7 +35,7 @@ class Command():
             self.chan = self.sender
 
         # Outputs the messages.
-        core.record("(" + self.chan + ") <" + self.sender + "> " + self.msg)
+        core.record("(%s) <%s> %s" % (self.chan, self.sender, self.msg))
 
         # Handles the commands.
         if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in core.operators:
@@ -50,16 +54,26 @@ class Command():
 
             # ** BASIC COMMANDS ** #
             elif self.msg_args[1] == "time":
-                core.outmsg(c, self.chan, "My current local time is " + core.logTime())
+                time = core.time()
+
+                core.outmsg(c, self.chan, "My current local time is %s" % time)
 
             # ** CONNECTION AND SYSTEM COMMANDS ** #
             # Orders the bot to join a channel.
             elif self.msg_args[1] == "join":
-                core.join(c, self.msg_args[2])
+                if len(msg_args) == 3:
+                    core.join(c, self.msg_args[2])
+
+                else:
+                    core.outmsg(c, self.chan, "I need to be given a channel to join!")
 
             # Orders the bot to part a channel.
             elif self.msg_args[1] == "part":
-                core.part(c, self.msg_args[2])
+                if len(msg_args) == 3:
+                    core.part(c, self.msg_args[2])
+
+                else:
+                    core.outmsg(c, self.chan, "I need to be given a channel to leave!")
 
             #### fixme: This breaks sometimes.
             # Reloads this module without restarting the bot.

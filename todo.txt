@@ -11,10 +11,13 @@ AethBot.py:
 
 core.py:
  * Put self.operators into a config file to read from, and include a check that the operator is logged in.
+
+commands.py
+ * Break into different, individual methods.
  * Allow a way to modify stuff in the config files from the bot itself.
 
 botmath.py:
- * This is old. Review how it works. Maybe (especially?) the debug main() thing.
+ * This is old. Review how it works.
 
 federation.py:
  * Write code that makes it aware of Federation so that it can be used as an IRC bot to issue Federation moves.

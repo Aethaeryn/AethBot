@@ -30,35 +30,46 @@ class BotCore:
         self.operators = set(["Aethaeryn", "Aeth", "MikeJB"]) #### TODO: Put in config.
         self.bot       = bot
         self.math      = botmath.Math("postfix")
-
+        self.channels  = ["##aeth"] #### TODO: Put in config.
+        self.about     = "AethBot Alpha, based on Python's irclib" #### TODO: Put in config.
         self.args      = args # Currently does nothing.
 
     # This is the default behavior for when identified.
     def identified(self, c):
-        self.join(c, "##aeth") #### TODO: Put in config.
+        for channel in self.channels:
+            self.join(c, channel)
 
     # This is the default return message when VERSION is requested via CTCP.
     def version(self):
-        return "AethBot Alpha 1, based on Python's irclib" #### TODO: Put in config.
+        return self.about
 
-    #### TODO: Make sure only successful attempts are logged!
+    #### TODO: Make sure only successful attempts are logged and handled properly!
     def join(self, c, chan):
         c.join(chan)
-        self.record("Joined channel " + chan + " on " + time.strftime("%Y %m %d") + " at " + self.logTime())
+        date = self.date()
+        time = self.time()
 
-    #### TODO: Make sure only successful attempts are logged!
+        self.record("Joined channel %s on %s at %s" % (chan, date, time))
+
+    #### TODO: Make sure only successful attempts are logged and handled properly!
     def part(self, c, chan, msg=''):
         c.part(chan, msg)
-        self.record("Left channel " + chan + " on " + time.strftime("%Y %m %d") + " at " + self.logTime() + " [" + msg + "]")
+        date = self.date()
+        time = self.time()
+
+        self.record("Left channel %s on %s at %s" % (chan, date, time))
 
     # Sends and records a message to a user or channel.
     def outmsg(self, server, target, msg):
-        self.record("(" + target + ") <" + server.get_nickname() + "> " + msg)
+        self.record("(%s) <%s> %s" % (target, server.get_nickname(), msg))
         server.privmsg(target, msg)
 
     # Obtains the time for logging purposes.
-    def logTime(self):
+    def time(self):
         return time.strftime("%H:%M:%S")
+
+    def date(self):
+        return time.strftime("%Y %m %d")
 
     # Reloads all AethBot modules.
     def reload(self):
@@ -70,7 +81,7 @@ class BotCore:
     # Records a line in the log.
     def record(self, message):
         # Timestamp logs are the default behavior.
-        message = self.logTime() + " " + message
+        message = "%s %s" % (self.time(), message)
 
         # File i/o.
         logfile = open('irc.log', 'a')

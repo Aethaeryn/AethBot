@@ -1,4 +1,4 @@
-#    AethBot Commands Module
+#    AethBot Events Module
 #    Copyright (C) 2011 Michael Babich
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -33,22 +33,25 @@ class Event():
     # Logs and handles private notices.
     def privnotice(self):
         msg = self.e.arguments()[0]
-        self.core.record("-" + self.nick + "- " + msg)
+        me  = self.c.get_nickname()
+        self.core.record("-%s- %s" % (self.nick, msg))
 
-        if self.nick == "NickServ" and msg == "You are now identified for \x02" + self.c.get_nickname() + "\x02.":
+        identified_msg = "You are now identified for \x02%s\x02." % me
+
+        if self.nick == "NickServ" and msg == identified_msg:
             self.core.identified(self.c)
 
     # Logs and handles public notices.
     def pubnotice(self):
         msg = self.e.arguments()[0]
 
-        self.core.record("-" + self.nick + ":" + self.chan + "- " + msg)
+        self.core.record("-%s:%s- %s" % (self.nick, self.chan, msg))
 
     # Logs and handles channel joins.
     def join(self):
         host = irclib.nm_to_uh(self.e.source())
 
-        self.core.record("-!- " + self.nick + " [" + host + "] has joined " + self.chan)
+        self.core.record("-!- %s [%s] has joined %s" % (self.nick, host, self.chan))
 
     # Logs and handles channel parts.
     def part(self):
@@ -58,23 +61,21 @@ class Event():
         if len(self.e.arguments()) == 1:
             msg = self.e.arguments()[0]
 
-        self.core.record("-!- " + self.nick + " [" + host + "] has left " +
-                         self.chan + " [" + msg + "]")
+        self.core.record("-!- %s [%s] has left %s [%s]" % (self.nick, host, self.chan, msg))
 
     # Logs and handles channel quits.
     def quit(self):
         host = irclib.nm_to_uh(self.e.source())
         msg  = self.e.arguments()[0]
 
-        self.core.record("-!- " + self.nick + " [" + host + "] has quit [" + msg + "]")
+        self.core.record("-!- %s [%s] has quit [%s]" % (self.nick, host, msg))
 
     # Logs and handles kicks.
     def kick(self):
         target = self.e.arguments()[0]
         msg    = self.e.arguments()[1]
 
-        self.core.record("-!- " + target + " was kicked from " + self.chan +
-                    " by " + self.nick + " [" + msg + "]")
+        self.core.record("-!- %s was kicked from %s by %s [%s]" % (target, self.chan, self.nick, msg))
 
     # Logs and handles channel modes.
     def mode(self):
@@ -84,4 +85,4 @@ class Event():
         if len(self.e.arguments()) == 2:
             arg2 = " " + self.e.arguments()[1]
 
-        self.core.record("-!- mode/" + self.chan + " [" + arg1 + arg2 + "] by " + self.nick)
+        self.core.record("-!- mode/%s [%s%s] by %s" % (self.chan, arg1, arg2, self.nick))
