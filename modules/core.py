@@ -26,13 +26,12 @@ import botmath, commands, events
 
 # Handles the core module to the IRC bot and calls all other custom modules.
 class BotCore:
-    def __init__(self, args, bot):
-        self.operators = set(["Aethaeryn", "Aeth", "MikeJB"]) #### TODO: Put in config.
+    def __init__(self, bot, ops, chans, about):
+        self.operators = set(ops)
         self.bot       = bot
         self.math      = botmath.Math("postfix")
-        self.channels  = ["##aeth"] #### TODO: Put in config.
-        self.about     = "AethBot Alpha, based on Python's irclib" #### TODO: Put in config.
-        self.args      = args # Currently does nothing.
+        self.channels  = chans
+        self.about     = about
 
     # This is the default behavior for when identified.
     def identified(self, c):
@@ -43,7 +42,7 @@ class BotCore:
     def version(self):
         return self.about
 
-    #### TODO: Make sure only successful attempts are logged and handled properly!
+    # Joins a channel.
     def join(self, c, chan):
         c.join(chan)
         date = self.date()
@@ -51,7 +50,7 @@ class BotCore:
 
         self.record("Joined channel %s on %s at %s" % (chan, date, time))
 
-    #### TODO: Make sure only successful attempts are logged and handled properly!
+    # Parts a channel.
     def part(self, c, chan, msg=''):
         c.part(chan, msg)
         date = self.date()
@@ -68,6 +67,7 @@ class BotCore:
     def time(self):
         return time.strftime("%H:%M:%S")
 
+    # Obtains the date for logging purposes.
     def date(self):
         return time.strftime("%Y %m %d")
 
@@ -76,7 +76,7 @@ class BotCore:
         reload(botmath)
         reload(commands)
         reload(events)
-        self.bot.reload_core(c, e, cmd.chan)
+        self.bot.reload_core(self.cmd.c, self.cmd.e, self.cmd.chan)
 
     # Records a line in the log.
     def record(self, message):
@@ -91,8 +91,8 @@ class BotCore:
     # Every notable and recorded IRC event except for messsages is handled here.
     # The event recording is designed to mimic the default irssi style.
     def handle_event(self, c, e):
-        ev = events.Event(self, c, e)
+        self.ev = events.Event(self, c, e)
 
     # Because messages can be commands, they're handled specially.
     def commands(self, c, e):
-        cmd = commands.Command(self, c, e)
+        self.cmd = commands.Command(self, c, e)

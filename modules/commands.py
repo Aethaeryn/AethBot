@@ -25,17 +25,17 @@ class Command():
         self.c        = c
         self.e        = e
 
-        self.msg      = e.arguments()[0]
+        self.msg      = self.e.arguments()[0]
         self.msg_args = self.msg.split()
-        self.sender   = irclib.nm_to_n(e.source())
-        self.chan     = e.target()
+        self.sender   = irclib.nm_to_n(self.e.source())
+        self.chan     = self.e.target()
 
         # If the target of the message has the bot's name, it was a query.
-        if irclib.nm_to_n(self.chan) == c.get_nickname():
+        if irclib.nm_to_n(self.chan) == self.c.get_nickname():
             self.chan = self.sender
 
-        # Outputs the messages.
-        core.record("(%s) <%s> %s" % (self.chan, self.sender, self.msg))
+        # Records the messages themselves.
+        self.core.record("(%s) <%s> %s" % (self.chan, self.sender, self.msg))
 
         # Handles the commands.
         if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in core.operators:
@@ -45,63 +45,65 @@ class Command():
             # Sends a message in the current channel or query.
             # syntax: , msg <message>
             if self.msg_args[1] == "msg":
-                core.outmsg(c, self.chan, self.msg[6:])
+                self.speak(self.msg[6:])
 
             # Sends a message to a given destination.
             # syntax: , <destination> msg <message>
             elif len(self.msg_args) > 2 and self.msg_args[2] == "msg":
-                core.outmsg(c, self.msg_args[1], self.msg[7 + len(self.msg_args[1]):])
+                self.core.outmsg(c, self.msg_args[1], self.msg[7 + len(self.msg_args[1]):])
 
             # ** BASIC COMMANDS ** #
             elif self.msg_args[1] == "time":
-                time = core.time()
+                time = self.core.time()
 
-                core.outmsg(c, self.chan, "My current local time is %s" % time)
+                self.speak("My current local time is %s" % time)
 
             # ** CONNECTION AND SYSTEM COMMANDS ** #
             # Orders the bot to join a channel.
             elif self.msg_args[1] == "join":
-                if len(msg_args) == 3:
-                    core.join(c, self.msg_args[2])
+                if len(self.msg_args) == 3:
+                    self.core.join(self.c, self.msg_args[2])
 
                 else:
-                    core.outmsg(c, self.chan, "I need to be given a channel to join!")
+                    self.speak("I need to be given a channel to join!")
 
             # Orders the bot to part a channel.
             elif self.msg_args[1] == "part":
-                if len(msg_args) == 3:
-                    core.part(c, self.msg_args[2])
+                if len(self.msg_args) == 3:
+                    self.core.part(self.c, self.msg_args[2])
 
                 else:
-                    core.outmsg(c, self.chan, "I need to be given a channel to leave!")
+                    self.speak("I need to be given a channel to leave!")
 
             #### fixme: This breaks sometimes.
             # Reloads this module without restarting the bot.
             # syntax: , reload
             elif self.msg_args[1] == "reload":
-                core.reload()
+                self.core.reload()
 
             # Orders the bot to disconnect from the server.
             # It will automatically attempt to reconnect.
             # syntax: , reconnect
             elif self.msg_args[1] == "reconnect":
-                core.bot.disconnect()
+                self.core.bot.disconnect()
 
             #### fixme: No quit message is displayed.
             # Orders the bot to quit from IRC.
             # syntax: , quit
             elif self.msg_args[1] == "quit":
-                core.bot.die(core.version())
+                self.core.bot.die(self.core.version())
 
             # The proper prefix without a recognized command gets an error.
             else:
-                core.outmsg(c, self.chan, "I'm sorry, I don't know that command.")
+                self.speak("I'm sorry, I don't know that command.")
 
         # Anything with this prefix is handled in botmath.py
         elif self.msg_args[0] == "~":
-            core.outmsg(c, self.chan, core.math.command(msg[2:]))
+            self.speak(self.core.math.command(self.msg[2:]))
 
         # Using the restricted prefix without being an operator gives an error.
         elif self.msg_args[0] == ",":
-            core.outmsg(c, self.chan, "I'm sorry, you are not authorized.")
+            self.speak("I'm sorry, you are not authorized.")
 
+    def speak(self, msg):
+        self.core.outmsg(self.c, self.chan, msg)

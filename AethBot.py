@@ -16,7 +16,7 @@
 
 
 # Default Python modules.
-import sys, collections, time
+import collections, time
 
 # python-irclib modules.
 import irclib, ircbot
@@ -35,13 +35,18 @@ class AethBot(ircbot.SingleServerIRCBot):
                  server = 'irc.freenode.net',
                  port   = 6667,
                  pw     = '',
-                 args   = ''):
+                 ops    = ["Aethaeryn", "Aeth", "MikeJB"],
+                 chans  = ["##aeth", '#federation', '#federation-dev'],
+                 about  = "AethBot Alpha, based on Python's irclib"):
         # Instantiates from ircbot.py
         ircbot.SingleServerIRCBot.__init__(self, [(server, port, pw)], nick, name)
 
         # Sets up the core.py main bot code.
-        self.args   = args
-        self.core   = core.BotCore(self.args, self)
+        self.ops   = ops
+        self.chans = chans
+        self.about = about
+
+        self.core   = core.BotCore(self, self.ops, self.chans, self.about)
 
     # ** Reads various events, sending them to core.py to be handled. ** #
     def on_privmsg(self, c, e):
@@ -78,21 +83,21 @@ class AethBot(ircbot.SingleServerIRCBot):
     def reload_core(self, c, e, target):
         try:
             reload(core)
-            self.core = core.BotCore(self.args, self)
+            self.core = core.BotCore(self, self.ops, self.chans, self.about)
             self.core.outmsg(c, target, "All modules have been reloaded.")
+
         except:
             self.core.outmsg(c, target, "Error in reloading modules.")
 
 # Runs the AethBot application.
 class BotRun:
-    def __init__(self, args):
+    def __init__(self):
         self.get_config()
 
         # Creates the bot with the command line and config preferences.
         self.bot = AethBot(nick = self.config['nick'],
                            name = self.config['name'],
-                           pw   = self.config['pw'],
-                           args = args)
+                           pw   = self.config['pw'])
 
         self.bot.start()
 
@@ -112,6 +117,6 @@ class BotRun:
 
 # Launches the bot.
 def main():
-    irc = BotRun(sys.argv)
+    irc = BotRun()
 
 main()

@@ -86,7 +86,7 @@ class PostfixMath:
     def pop(self):
         if len(self.stack) > 0:
             removed = self.stack.pop()
-            return "Popped " + str(removed) + " from the stack"
+            return "Result: %s" % removed
         else:
             return "Error: Empty stack"
 
@@ -128,7 +128,7 @@ class PostfixMath:
             outputStrings = ""
 
             for output in outputs:
-                if string.find(output, "cleared") != -1 or string.find(output, "Popped") != -1 or string.find(output, "Error:") != -1 or string.find(output, "Items on stack") != -1:
+                if string.find(output, "cleared") != -1 or string.find(output, "Result:") != -1 or string.find(output, "Error:") != -1 or string.find(output, "Items on stack") != -1:
                     outputStrings += output
                     outputStrings += "; "
 
