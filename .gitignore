@@ -1,5 +1,5 @@
 # Ignore the configuration file so that people don't accidentally upload their password.
-config
+config*
 
 # Ignore hidden files that aren't explicitly added.
 .*

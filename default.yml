@@ -1,0 +1,17 @@
+# These are default options. Any customizations should be made at config.yml.
+
+Connection:
+  nick   : "AethBot"
+  name   : "AethBot"
+  pw     : "YourPasswordHere"
+  server : "irc.freenode.net"
+  port   : 6667
+  about  : "AethBot, based on Python's irclib"
+  ops:
+    - "Aethaeryn"
+    - "Aeth"
+    - "MikeJB"
+  chans:
+    - "##aeth"
+    - "#federation"
+    - "#federation-dev"

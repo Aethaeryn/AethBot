@@ -1,5 +1,4 @@
 In general:
- * Use yaml configs instead of a custom parser. Make all options for AethBot() a yaml customization.
  * Separate the irclogs into different files per channel, and queries.
 
 AethBot.py:
@@ -8,6 +7,7 @@ AethBot.py:
 
 core.py:
  * Make sure only successful joins/parts are logged; handle properly!
+ * Make sure that the reload stuff is successfully fixed.
 
 commands.py
  * Break into different, individual methods.

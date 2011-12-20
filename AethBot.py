@@ -15,8 +15,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Default Python modules.
-import collections, time
+# Python modules.
+import collections, time, yaml
 
 # python-irclib modules.
 import irclib, ircbot
@@ -29,22 +29,16 @@ from modules import core
 # features are handled in individual modules, centered around core.py, so that
 # they can be reloaded while the bot is still running.
 class AethBot(ircbot.SingleServerIRCBot):
-    def __init__(self,
-                 nick   = 'AethBot',
-                 name   = 'AethBot',
-                 server = 'irc.freenode.net',
-                 port   = 6667,
-                 pw     = '',
-                 ops    = ["Aethaeryn", "Aeth", "MikeJB"],
-                 chans  = ["##aeth", '#federation', '#federation-dev'],
-                 about  = "AethBot Alpha, based on Python's irclib"):
+    def __init__(self, config):
         # Instantiates from ircbot.py
-        ircbot.SingleServerIRCBot.__init__(self, [(server, port, pw)], nick, name)
+        bot = config["Connection"]
+
+        ircbot.SingleServerIRCBot.__init__(self, [(bot["server"], bot["port"], bot["pw"])], bot["nick"], bot["name"])
 
         # Sets up the core.py main bot code.
-        self.ops   = ops
-        self.chans = chans
-        self.about = about
+        self.ops   = bot["ops"]
+        self.chans = bot["chans"]
+        self.about = bot["about"]
 
         self.core   = core.BotCore(self, self.ops, self.chans, self.about)
 
@@ -92,28 +86,37 @@ class AethBot(ircbot.SingleServerIRCBot):
 # Runs the AethBot application.
 class BotRun:
     def __init__(self):
-        self.get_config()
+        config = self.loadConfig()
 
-        # Creates the bot with the command line and config preferences.
-        self.bot = AethBot(nick = self.config['nick'],
-                           name = self.config['name'],
-                           pw   = self.config['pw'])
+        self.bot = AethBot(config)
 
         self.bot.start()
 
-    # Loads the nick and password from the configuration file into a dictionary.
-    # The only elements it recognizes are 'nick', 'name' (optional), and 'pw'.
-    def get_config(self):
-        self.config = {}
+    def loadConfig(self):
+        # Loads the defaults.
+        default_file = open('default.yml', 'r')
+        default      = yaml.load(default_file)
+        default_file.close()         
 
-        config_file = open("config", "r")
+        # Loads the custom options, if they exist.
+        try:
+            config_file  = open('config.yml', 'r')
+            config       = yaml.load(config_file)
+            config_file.close()
 
-        for line in config_file:
-            line = line.split("=")
-            self.config[line[0].strip()] = line[1].strip()
+        except IOError:
+            config = default
 
-        if 'name' not in self.config:
-            self.config['name'] = self.config['nick']
+        # Anything missing from the config file is overriden by the defaults.
+        for main_section in default:
+            if main_section not in config:
+                config[main_section] = default[main_section]
+            else:
+                for subsection in default[main_section]:
+                    if subsection not in config[main_section]:
+                        config[main_section][subsection] = default[main_section][subsection]
+
+        return config
 
 # Launches the bot.
 def main():
