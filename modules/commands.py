@@ -37,8 +37,12 @@ class Command():
         # Records the messages themselves.
         self.core.record("(%s) <%s> %s" % (self.chan, self.sender, self.msg))
 
+        # Skips over blank lines so it doesn't crash.
+        if len(self.msg_args) == 0:
+            pass
+
         # Handles the commands.
-        if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in core.operators:
+        elif self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in core.operators:
             self.msg_args[1] = self.msg_args[1].lower()
 
             # ** MESSGING COMMANDS ** #
