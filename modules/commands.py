@@ -15,15 +15,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Default Python modules
+import string
+
 # python-irclib modules.
 import irclib
 
+# Handles all messages. The ones that are commands are then treated appropriately.
 class Command():
     def __init__(self, core, c, e):
         # Reads in all the relevant information for the commands.
         self.core     = core
         self.c        = c
         self.e        = e
+        self.me       = self.c.get_nickname()
 
         self.msg      = self.e.arguments()[0]
         self.msg_args = self.msg.split()
@@ -37,38 +42,51 @@ class Command():
         # Records the messages themselves.
         self.core.record("(%s) <%s> %s" % (self.chan, self.sender, self.msg))
 
-        self.commands()
-
-    def commands(self):
         # Skips over blank lines so it doesn't crash.
         if len(self.msg_args) == 0:
             pass
 
+        # Messaging the bot's name directly will cause the bot to check for commands.
+        elif (self.msg_args[0] == self.me + ":" and self.chan != self.sender):
+            # We want the bot to ignore its name when handling the commands.
+            self.msg_args.pop(0)
+            self.commands()
+
+        # Querying it will work, too.
+        elif self.chan == self.sender:
+            self.commands()
+
+    # Determines what kind of command it is and sends it to the right location.
+    def commands(self):
         # Handles the core commands.
-        elif self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in self.core.operators:
+        if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in self.core.operators:
             self.msg_args[1] = self.msg_args[1].lower()
 
             self.core_commands()
  
         # Hands the math over to calc.py
         elif self.msg_args[0] == "~":
-            self.speak(self.core.math.command(self.msg[2:]))
+            pos = string.find(self.msg, self.msg_args[0])
+            self.speak(self.core.math.command(self.msg[(pos + len(self.msg_args[0]) + 1):]))
 
         # Using the restricted prefix without being an operator gives an error.
         elif self.msg_args[0] == ",":
             self.speak("I'm sorry, you are not authorized.")
 
+    # The main commands, not part of another module, are handled here.
     def core_commands(self):
         # ** MESSGING COMMANDS ** #
         # Sends a message in the current channel or query.
         # syntax: , msg <message>
         if self.msg_args[1] == "msg":
-            self.speak(self.msg[6:])
+            pos = string.find(self.msg, self.msg_args[1])
+            self.speak(self.msg[(pos + len(self.msg_args[1]) + 1):])
 
         # Sends a message to a given destination.
         # syntax: , <destination> msg <message>
         elif len(self.msg_args) > 2 and self.msg_args[2] == "msg":
-            self.core.outmsg(c, self.msg_args[1], self.msg[7 + len(self.msg_args[1]):])
+            pos = string.find(self.msg, self.msg_args[2])
+            self.core.outmsg(self.c, self.msg_args[1], self.msg[(pos + len(self.msg_args[2]) + 1):])
 
         # ** BASIC COMMANDS ** #
         elif self.msg_args[1] == "time":
