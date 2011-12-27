@@ -50,7 +50,7 @@ class Command():
 
             self.core_commands()
  
-        # Hands the math over to botmath.py
+        # Hands the math over to calc.py
         elif self.msg_args[0] == "~":
             self.speak(self.core.math.command(self.msg[2:]))
 

@@ -22,14 +22,14 @@ import time, string
 import irclib
 
 # Other modules in this folder.
-import botmath, commands, events
+import calc, commands, events
 
 # Handles the core module to the IRC bot and calls all other custom modules.
 class BotCore:
     def __init__(self, bot, ops, chans, about):
         self.operators = set(ops)
         self.bot       = bot
-        self.math      = botmath.Math("postfix")
+        self.math      = calc.Math("postfix")
         self.channels  = chans
         self.about     = about
 
@@ -73,7 +73,7 @@ class BotCore:
 
     # Reloads all AethBot modules.
     def reload(self):
-        reload(botmath)
+        reload(calc)
         reload(commands)
         reload(events)
         self.bot.reload_core(self.cmd.c, self.cmd.e, self.cmd.chan)

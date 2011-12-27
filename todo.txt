@@ -14,7 +14,7 @@ commands.py
  * Allow a way to modify stuff in the config files from the bot itself.
  * Include a check that the operator is identified with nickserv.
 
-botmath.py:
+calc.py:
  * This is old. Review how it works.
 
 federation.py:
