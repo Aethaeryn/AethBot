@@ -7,15 +7,16 @@ AethBot.py:
 
 core.py:
  * Make sure only successful joins/parts are logged; handle properly!
- * Make sure that the reload stuff is successfully fixed.
 
 commands.py
- * Break into different, individual methods.
  * Allow a way to modify stuff in the config files from the bot itself.
  * Include a check that the operator is identified with nickserv.
+ * Create a separate help syntax, like ~ and ,
+ * No quit message is displayed on , quit.
 
 calc.py:
  * This is old. Review how it works.
+ * Add a help command.
 
 federation.py:
  * Write code that makes it aware of Federation so that it can be used as an IRC bot to issue Federation moves.

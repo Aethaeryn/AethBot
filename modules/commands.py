@@ -58,6 +58,8 @@ class Command():
 
     # Determines what kind of command it is and sends it to the right location.
     def commands(self):
+        self.calc_words = set(["~", "calc", "math"])
+
         # Handles the core commands.
         if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in self.core.operators:
             self.msg_args[1] = self.msg_args[1].lower()
@@ -65,7 +67,7 @@ class Command():
             self.core_commands()
  
         # Hands the math over to calc.py
-        elif self.msg_args[0] == "~":
+        elif self.msg_args[0] in self.calc_words:
             pos = string.find(self.msg, self.msg_args[0])
             self.speak(self.core.math.command(self.msg[(pos + len(self.msg_args[0]) + 1):]))
 
@@ -73,9 +75,30 @@ class Command():
         elif self.msg_args[0] == ",":
             self.speak("I'm sorry, you are not authorized.")
 
+        else:
+            self.public_commands()
+
+    # These are harmless, public commands that anyone can use.
+    def public_commands(self):
+        if self.msg_args[0] == "help":
+            self.speak("I am AethBot, a basic IRC bot created by Aethaeryn on the Freenode IRC network. For commands you can use, say 'commands'.")
+
+        elif self.msg_args[0] == "commands":
+            commands = "The following public commands are available: help command time"
+
+            for word in self.calc_words:
+                commands += " %s" % word
+
+            self.speak(commands)
+
+        # Displays the current local time.
+        elif self.msg_args[0] == "time":
+            time = self.core.time()
+
+            self.speak("My current local time is %s" % time)
+
     # The main commands, not part of another module, are handled here.
     def core_commands(self):
-        # ** MESSGING COMMANDS ** #
         # Sends a message in the current channel or query.
         # syntax: , msg <message>
         if self.msg_args[1] == "msg":
@@ -88,13 +111,6 @@ class Command():
             pos = string.find(self.msg, self.msg_args[2])
             self.core.outmsg(self.c, self.msg_args[1], self.msg[(pos + len(self.msg_args[2]) + 1):])
 
-        # ** BASIC COMMANDS ** #
-        elif self.msg_args[1] == "time":
-            time = self.core.time()
-
-            self.speak("My current local time is %s" % time)
-
-        # ** CONNECTION AND SYSTEM COMMANDS ** #
         # Orders the bot to join a channel.
         elif self.msg_args[1] == "join":
             if len(self.msg_args) == 3:
@@ -111,7 +127,6 @@ class Command():
             else:
                 self.speak("I need to be given a channel to leave!")
 
-        #### fixme: This breaks sometimes.
         # Reloads this module without restarting the bot.
         # syntax: , reload
         elif self.msg_args[1] == "reload":
@@ -123,7 +138,6 @@ class Command():
         elif self.msg_args[1] == "reconnect":
             self.core.bot.disconnect()
 
-        #### fixme: No quit message is displayed.
         # Orders the bot to quit from IRC.
         # syntax: , quit
         elif self.msg_args[1] == "quit":
