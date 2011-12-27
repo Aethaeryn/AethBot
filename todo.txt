@@ -2,14 +2,12 @@ AethBot.py:
  * Enable ssl. This may require rewriting it to get rid of ircbot dependency.
    * This is probably preferable if it can get rid of the mess of inherited on_foobar functions.
 
-core.py:
- * Make sure only successful joins/parts are logged; handle properly!
-
 commands.py
  * Allow a way to modify stuff in the config files from the bot itself.
  * Include a check that the operator is identified with nickserv.
  * Create a separate help syntax, like ~ and ,
  * No quit message is displayed on , quit.
+ * Sometimes the bot speaks into the wrong channel after , reload
 
 calc.py:
  * This is old. Review how it works.

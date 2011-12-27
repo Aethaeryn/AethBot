@@ -38,21 +38,13 @@ class BotCore:
         for channel in self.channels:
             self.join(c, channel)
 
-    # Joins a channel.
+    # Tries to join a channel.
     def join(self, c, chan):
         c.join(chan)
-        date = self.date()
-        time = self.time()
 
-        self.record("Joined channel %s on %s at %s" % (chan, date, time), chan)
-
-    # Parts a channel.
+    # Tries to parts a channel.
     def part(self, c, chan, msg=''):
         c.part(chan, msg)
-        date = self.date()
-        time = self.time()
-
-        self.record("Left channel %s on %s at %s" % (chan, date, time), chan)
 
     # Sends and records a message to a user or channel.
     def outmsg(self, server, target, msg):

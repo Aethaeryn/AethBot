@@ -123,13 +123,13 @@ class Command():
 
         # Sends a message to a given destination.
         # syntax: , <destination> msg <message>
-        elif len(self.msg_args) > 2 and self.msg_args[1] == "msg":
+        elif len(self.msg_args) > 1 and self.msg_args[1] == "msg":
             pos = string.find(self.msg, self.msg_args[1])
             self.core.outmsg(self.c, self.msg_args[0], self.msg[(pos + len(self.msg_args[1]) + 1):])
 
         # Orders the bot to join a channel.
         elif self.msg_args[0] == "join":
-            if len(self.msg_args) == 3:
+            if len(self.msg_args) == 2:
                 self.core.join(self.c, self.msg_args[1])
 
             else:
@@ -137,7 +137,7 @@ class Command():
 
         # Orders the bot to part a channel.
         elif self.msg_args[0] == "part":
-            if len(self.msg_args) == 3:
+            if len(self.msg_args) == 2:
                 self.core.part(self.c, self.msg_args[1])
 
             else:
