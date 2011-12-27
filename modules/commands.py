@@ -84,12 +84,15 @@ class Command():
             self.speak("I am AethBot, a basic IRC bot created by Aethaeryn on the Freenode IRC network. For commands you can use, say 'commands'.")
 
         elif self.msg_args[0] == "commands":
-            commands = "The following public commands are available: help command time"
+            commands = "The following public commands are available: help commands time version"
 
             for word in self.calc_words:
                 commands += " %s" % word
 
             self.speak(commands)
+
+        elif self.msg_args[0] == "version":
+            self.speak(self.core.version())
 
         # Displays the current local time.
         elif self.msg_args[0] == "time":
