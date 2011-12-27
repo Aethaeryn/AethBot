@@ -1,6 +1,3 @@
-In general:
- * Separate the irclogs into different files per channel, and queries.
-
 AethBot.py:
  * Enable ssl. This may require rewriting it to get rid of ircbot dependency.
    * This is probably preferable if it can get rid of the mess of inherited on_foobar functions.

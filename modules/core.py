@@ -31,16 +31,12 @@ class BotCore:
         self.bot       = bot
         self.math      = calc.Math("postfix")
         self.channels  = chans
-        self.about     = about
+        self.version   = about
 
     # This is the default behavior for when identified.
     def identified(self, c):
         for channel in self.channels:
             self.join(c, channel)
-
-    # This is the default return message when VERSION is requested via CTCP.
-    def version(self):
-        return self.about
 
     # Joins a channel.
     def join(self, c, chan):

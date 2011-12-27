@@ -105,7 +105,7 @@ class Command():
 
         # Prints the version string.
         elif self.msg_args[0] == "version":
-            self.speak(self.core.version())
+            self.speak(self.core.version)
 
         # Displays the current local time.
         elif self.msg_args[0] == "time":
@@ -157,7 +157,7 @@ class Command():
         # Orders the bot to quit from IRC.
         # syntax: , quit
         elif self.msg_args[0] == "quit":
-            self.core.bot.die(self.core.version())
+            self.core.bot.die(self.core.version)
 
         # The proper prefix without a recognized command gets an error.
         else:

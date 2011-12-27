@@ -71,7 +71,7 @@ class AethBot(ircbot.SingleServerIRCBot):
         self.core.handle_event(c, e)
 
     def get_version(self):
-        return self.core.version()
+        return self.core.version
 
     # Reloads the core.py if the new code isn't buggy.
     def reload_core(self, c, e, target):
