@@ -16,7 +16,7 @@
 
 
 # Default Python modules.
-import time, string
+import time, string, os
 
 # python-irclib modules.
 import irclib
@@ -48,7 +48,7 @@ class BotCore:
         date = self.date()
         time = self.time()
 
-        self.record("Joined channel %s on %s at %s" % (chan, date, time))
+        self.record("Joined channel %s on %s at %s" % (chan, date, time), chan)
 
     # Parts a channel.
     def part(self, c, chan, msg=''):
@@ -56,11 +56,11 @@ class BotCore:
         date = self.date()
         time = self.time()
 
-        self.record("Left channel %s on %s at %s" % (chan, date, time))
+        self.record("Left channel %s on %s at %s" % (chan, date, time), chan)
 
     # Sends and records a message to a user or channel.
     def outmsg(self, server, target, msg):
-        self.record("(%s) <%s> %s" % (target, server.get_nickname(), msg))
+        self.record("<%s> %s" % (server.get_nickname(), msg), target)
         server.privmsg(target, msg)
 
     # Obtains the time for logging purposes.
@@ -79,12 +79,24 @@ class BotCore:
         self.bot.reload_core(self.cmd.c, self.cmd.e, self.cmd.chan)
 
     # Records a line in the log.
-    def record(self, message):
+    def record(self, message, name):
+        # Records logs in the log directory.
+        directory = "logs"
+
+        if directory not in os.listdir("."):
+            os.mkdir(directory)
+
+        name = name.lower()
+
+        # If there is no channel or nick, the name should be 'irc.log'
+        if name == "*":
+            name = "irc"
+
         # Timestamp logs are the default behavior.
         message = "%s %s" % (self.time(), message)
 
         # File i/o.
-        logfile = open('irc.log', 'a')
+        logfile = open("%s/%s.log" % (directory, name), "a")
         logfile.writelines(message + "\n")
         logfile.close()
 

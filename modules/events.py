@@ -34,7 +34,7 @@ class Event():
     def privnotice(self):
         msg = self.e.arguments()[0]
         me  = self.c.get_nickname()
-        self.core.record("-%s- %s" % (self.nick, msg))
+        self.core.record("-%s- %s" % (self.nick, msg), self.chan)
 
         identified_msg = "You are now identified for \x02%s\x02." % me
 
@@ -45,13 +45,13 @@ class Event():
     def pubnotice(self):
         msg = self.e.arguments()[0]
 
-        self.core.record("-%s:%s- %s" % (self.nick, self.chan, msg))
+        self.core.record("-%s:%s- %s" % (self.nick, self.chan, msg), self.chan)
 
     # Logs and handles channel joins.
     def join(self):
         host = irclib.nm_to_uh(self.e.source())
 
-        self.core.record("-!- %s [%s] has joined %s" % (self.nick, host, self.chan))
+        self.core.record("-!- %s [%s] has joined %s" % (self.nick, host, self.chan), self.chan)
 
     # Logs and handles channel parts.
     def part(self):
@@ -61,21 +61,21 @@ class Event():
         if len(self.e.arguments()) == 1:
             msg = self.e.arguments()[0]
 
-        self.core.record("-!- %s [%s] has left %s [%s]" % (self.nick, host, self.chan, msg))
+        self.core.record("-!- %s [%s] has left %s [%s]" % (self.nick, host, self.chan, msg), self.chan)
 
     # Logs and handles channel quits.
     def quit(self):
         host = irclib.nm_to_uh(self.e.source())
         msg  = self.e.arguments()[0]
 
-        self.core.record("-!- %s [%s] has quit [%s]" % (self.nick, host, msg))
+        self.core.record("-!- %s [%s] has quit [%s]" % (self.nick, host, msg), self.chan)
 
     # Logs and handles kicks.
     def kick(self):
         target = self.e.arguments()[0]
         msg    = self.e.arguments()[1]
 
-        self.core.record("-!- %s was kicked from %s by %s [%s]" % (target, self.chan, self.nick, msg))
+        self.core.record("-!- %s was kicked from %s by %s [%s]" % (target, self.chan, self.nick, msg), self.chan)
 
     # Logs and handles channel modes.
     def mode(self):
@@ -85,4 +85,4 @@ class Event():
         if len(self.e.arguments()) == 2:
             arg2 = " " + self.e.arguments()[1]
 
-        self.core.record("-!- mode/%s [%s%s] by %s" % (self.chan, arg1, arg2, self.nick))
+        self.core.record("-!- mode/%s [%s%s] by %s" % (self.chan, arg1, arg2, self.nick), self.chan)

@@ -40,7 +40,7 @@ class Command():
             self.chan = self.sender
 
         # Records the messages themselves.
-        self.core.record("(%s) <%s> %s" % (self.chan, self.sender, self.msg))
+        self.core.record("<%s> %s" % (self.sender, self.msg), self.chan)
 
         # Skips over blank lines so it doesn't crash.
         if len(self.msg_args) == 0:
@@ -62,7 +62,8 @@ class Command():
 
         # Handles the core commands.
         if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in self.core.operators:
-            self.msg_args[1] = self.msg_args[1].lower()
+            self.msg_args.pop(0)
+            self.msg_args[0] = self.msg_args[0].lower()
 
             self.core_commands()
  
@@ -80,17 +81,29 @@ class Command():
 
     # These are harmless, public commands that anyone can use.
     def public_commands(self):
+        # Displays a help string.
         if self.msg_args[0] == "help":
-            self.speak("I am AethBot, a basic IRC bot created by Aethaeryn on the Freenode IRC network. For commands you can use, say 'commands'.")
+            self.speak("I am AethBot, a basic IRC bot created in Python by Aethaeryn. For commands you can use, say 'commands'.")
 
+        # Lists public commands.
         elif self.msg_args[0] == "commands":
-            commands = "The following public commands are available: help commands time version"
+            commands = "The following public commands are available: help commands time version ops"
 
             for word in self.calc_words:
                 commands += " %s" % word
 
             self.speak(commands)
 
+        # Prints the current operators.
+        elif self.msg_args[0] == "ops":
+            op_msg = "My current operators are:"
+
+            for op in self.core.operators:
+                op_msg += " %s" % op
+
+            self.speak(op_msg)
+
+        # Prints the version string.
         elif self.msg_args[0] == "version":
             self.speak(self.core.version())
 
@@ -104,46 +117,46 @@ class Command():
     def core_commands(self):
         # Sends a message in the current channel or query.
         # syntax: , msg <message>
-        if self.msg_args[1] == "msg":
-            pos = string.find(self.msg, self.msg_args[1])
-            self.speak(self.msg[(pos + len(self.msg_args[1]) + 1):])
+        if self.msg_args[0] == "msg":
+            pos = string.find(self.msg, self.msg_args[0])
+            self.speak(self.msg[(pos + len(self.msg_args[0]) + 1):])
 
         # Sends a message to a given destination.
         # syntax: , <destination> msg <message>
-        elif len(self.msg_args) > 2 and self.msg_args[2] == "msg":
-            pos = string.find(self.msg, self.msg_args[2])
-            self.core.outmsg(self.c, self.msg_args[1], self.msg[(pos + len(self.msg_args[2]) + 1):])
+        elif len(self.msg_args) > 2 and self.msg_args[1] == "msg":
+            pos = string.find(self.msg, self.msg_args[1])
+            self.core.outmsg(self.c, self.msg_args[0], self.msg[(pos + len(self.msg_args[1]) + 1):])
 
         # Orders the bot to join a channel.
-        elif self.msg_args[1] == "join":
+        elif self.msg_args[0] == "join":
             if len(self.msg_args) == 3:
-                self.core.join(self.c, self.msg_args[2])
+                self.core.join(self.c, self.msg_args[1])
 
             else:
                 self.speak("I need to be given a channel to join!")
 
         # Orders the bot to part a channel.
-        elif self.msg_args[1] == "part":
+        elif self.msg_args[0] == "part":
             if len(self.msg_args) == 3:
-                self.core.part(self.c, self.msg_args[2])
+                self.core.part(self.c, self.msg_args[1])
 
             else:
                 self.speak("I need to be given a channel to leave!")
 
         # Reloads this module without restarting the bot.
         # syntax: , reload
-        elif self.msg_args[1] == "reload":
+        elif self.msg_args[0] == "reload":
             self.core.reload()
 
         # Orders the bot to disconnect from the server.
         # It will automatically attempt to reconnect.
         # syntax: , reconnect
-        elif self.msg_args[1] == "reconnect":
+        elif self.msg_args[0] == "reconnect":
             self.core.bot.disconnect()
 
         # Orders the bot to quit from IRC.
         # syntax: , quit
-        elif self.msg_args[1] == "quit":
+        elif self.msg_args[0] == "quit":
             self.core.bot.die(self.core.version())
 
         # The proper prefix without a recognized command gets an error.
