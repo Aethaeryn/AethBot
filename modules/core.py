@@ -78,8 +78,17 @@ class BotCore:
         if name:
             name = name.lower()
 
+        # If no name (i.e. location of events) is given, it's logged in the
+        # default log and then also in any channels the person who triggered
+        # the event (such as a quit) is in.
         else:
             name = "irc"
+
+            for channel in self.bot.channels:
+                nick = message.split()[1]
+
+                if nick in self.bot.channels[channel].userdict:
+                    self.record(message, channel)
 
         # If there is no channel or nick, the name should be 'irc.log'
         if name == "*":
