@@ -74,7 +74,12 @@ class BotCore:
         if directory not in os.listdir("."):
             os.mkdir(directory)
 
-        name = name.lower()
+        # Prevents crash if name is not given.
+        if name:
+            name = name.lower()
+
+        else:
+            name = "irc"
 
         # If there is no channel or nick, the name should be 'irc.log'
         if name == "*":
