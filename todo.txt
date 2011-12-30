@@ -1,3 +1,6 @@
+ircbot.py and AethBot.py:
+ * Go through and determine what is actually being used from ircbot.py and rewrite them as part of AethBot.
+
 commands.py
  * Allow a way to modify stuff in the config files from the bot itself.
  * Include a check that the operator is identified with nickserv.
