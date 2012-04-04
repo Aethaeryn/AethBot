@@ -85,11 +85,13 @@ class PostfixMath:
 
     def command(self, command):
         elements = command.split()
-        
+
+        # These symbols are handled as 'pop' by the system.
+        pop_synonyms = set(["=", "p"])
+
         # Handles the elements to be added to the stack.
         for i in range(len(elements)):
-            # The equals is equivalent to pop.
-            if elements[i] == "=":
+            if elements[i] in pop_synonyms:
                 elements[i] = "pop"
 
             # The common exponent sign is converted to the Python form.
