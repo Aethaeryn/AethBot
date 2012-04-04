@@ -1,10 +1,10 @@
- * Add /me handling.
-   * "/me asdf" is actually "/ctcp foo ACTION asdf"
-   * Test out CTCP to AethBot, and to a channel in general.
- * What is the op-notice feature?
-
 ircbot.py and AethBot.py:
  * Go through and determine what is actually being used from ircbot.py and rewrite them as part of AethBot.
+
+events.py
+ * Log general CTCP, not just specific ones, like ACTION.
+ * Implement a response for CTCP VERSION, CTCP PING, and DCC.
+ * Figure out how to handle op-notices.
 
 commands.py
  * Allow a way to modify stuff in the config files from the bot itself.

@@ -18,6 +18,9 @@
 # python-irclib modules.
 import irclib
 
+# Other modules in this folder.
+import commands
+
 class Event():
     def __init__(self, core, c, e):
         # Common information across all event types.
@@ -86,3 +89,18 @@ class Event():
             arg2 = " " + self.e.arguments()[1]
 
         self.core.record("-!- mode/%s [%s%s] by %s" % (self.chan, arg1, arg2, self.nick), self.chan)
+
+    # Handles ctcp.
+    def ctcp(self):
+        arg = self.e.arguments()
+
+        if arg[0] == "ACTION":
+            msg = arg[1]
+
+            me_log = " * %s %s"  % (self.nick, msg)
+
+            if self.chan != "AethBot":
+                self.core.record(me_log, self.chan)
+
+            else:
+                self.core.record(me_log, self.nick)

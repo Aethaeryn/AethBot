@@ -70,6 +70,9 @@ class AethBot(ircbot.SingleServerIRCBot):
     def on_mode(self, c, e):
         self.core.handle_event(c, e)
 
+    def on_ctcp(self, c, e):
+        self.core.handle_event(c, e)
+
     def get_version(self):
         return self.core.version
 
