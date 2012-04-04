@@ -53,11 +53,11 @@ class BotCore:
         return time.strftime("%Y %m %d")
 
     # Reloads all AethBot modules.
-    def reload(self):
+    def reload(self, c, e, chan):
         reload(calc)
         reload(commands)
         reload(events)
-        self.bot.reload_core(self.cmd.c, self.cmd.e, self.cmd.chan)
+        self.bot.reload_core(c, e, chan)
 
     # Records a line in the log.
     def record(self, message, name):
@@ -102,4 +102,4 @@ class BotCore:
 
     # Because messages can be commands, they're handled specially.
     def commands(self, c, e):
-        self.cmd = commands.Command(self, c, e)
+        commands.Command(self, c, e)

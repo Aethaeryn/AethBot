@@ -1,5 +1,13 @@
-ircbot.py and AethBot.py:
- * Go through and determine what is actually being used from ircbot.py and rewrite them as part of AethBot.
+AethBot.py
+ * Allow Freenode SSL
+ * Add a basic editor for operators.
+ * Replace all the features that are now missing that were in ircbot.py
+
+core.py
+ * Replace self.bot.channels, mentioned in BotCore.record()
+ * Keep track of user status (+o, +v, etc.) and log it.
+ * Make the log directory configurable.
+ * Remove the , prefix for commands.
 
 events.py
  * Log general CTCP, not just specific ones, like ACTION.
@@ -9,10 +17,9 @@ events.py
 commands.py
  * Allow a way to modify stuff in the config files from the bot itself.
  * Include a check that the operator is identified with nickserv.
- * Create a separate help syntax, like ~ and ,
- * No quit message is displayed on , quit.
- * Sometimes the bot speaks into the wrong channel after , reload
- * Sometimes reloading will crash the bot because self.cmd doesn't show up.
+ * Create a help syntax.
+ * No quit message is displayed on , quit sometimes.
+ * Make sure that reload functions properly in all cases.
 
 calc.py:
  * This is old. Review how it works.

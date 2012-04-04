@@ -9,7 +9,8 @@
 
 
 # Default Python modules
-import string
+import string, sys
+from time import sleep
 
 # python-irclib modules.
 import irclib
@@ -139,18 +140,13 @@ class Command():
         # Reloads this module without restarting the bot.
         # syntax: , reload
         elif self.msg_args[0] == "reload":
-            self.core.reload()
-
-        # Orders the bot to disconnect from the server.
-        # It will automatically attempt to reconnect.
-        # syntax: , reconnect
-        elif self.msg_args[0] == "reconnect":
-            self.core.bot.disconnect()
+            self.core.reload(self.c, self.e, self.chan)
 
         # Orders the bot to quit from IRC.
         # syntax: , quit
         elif self.msg_args[0] == "quit":
-            self.core.bot.die(self.core.version)
+            self.core.bot.connection.disconnect(self.core.version)
+            sys.exit(0)
 
         # The proper prefix without a recognized command gets an error.
         else:

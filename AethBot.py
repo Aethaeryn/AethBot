@@ -9,10 +9,7 @@
 
 
 # Python modules.
-import collections, time, yaml
-
-# python-irclib modules.
-import irclib, ircbot
+import irclib, yaml
 
 # Handles the AethBot modules.
 from modules import core
@@ -21,12 +18,13 @@ from modules import core
 # This file contains the bare minimum necessary to get it to run. The fancier
 # features are handled in individual modules, centered around core.py, so that
 # they can be reloaded while the bot is still running.
-class AethBot(ircbot.SingleServerIRCBot):
+class AethBot(irclib.SimpleIRCClient):
     def __init__(self, config):
         # Instantiates from ircbot.py
         bot = config["Connection"]
 
-        ircbot.SingleServerIRCBot.__init__(self, [(bot["server"], bot["port"], bot["pw"])], bot["nick"], bot["name"])
+        irclib.SimpleIRCClient.__init__(self)
+        self.connect(bot["server"], bot["port"], bot["nick"], bot["pw"], bot["name"])
 
         # Sets up the core.py main bot code.
         self.ops   = bot["ops"]
@@ -34,6 +32,7 @@ class AethBot(ircbot.SingleServerIRCBot):
         self.about = bot["about"]
 
         self.core   = core.BotCore(self, self.ops, self.chans, self.about)
+        irclib.SimpleIRCClient.start(self)
 
     # ** Reads various events, sending them to core.py to be handled. ** #
     def on_privmsg(self, c, e):
@@ -85,8 +84,6 @@ class BotRun:
         config = self.loadConfig()
 
         self.bot = AethBot(config)
-
-        self.bot.start()
 
     def loadConfig(self):
         # Loads the defaults.
