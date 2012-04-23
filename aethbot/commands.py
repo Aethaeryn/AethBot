@@ -1,12 +1,5 @@
-#    AethBot Commands Module
-#    Copyright (C) 2011, 2012 Michael Babich
-#
-#    This program is free software. It comes without any warranty, to
-#    the extent permitted by applicable law. You can redistribute it
-#    and/or modify it under the terms of the Do What The Fuck You Want
-#    To Public License, Version 2, as published by Sam Hocevar. See
-#    http://sam.zoy.org/wtfpl/COPYING for more details.
-
+# Copyright (c) 2011, 2012 Michael Babich
+# See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
 # Default Python modules
 import string, sys
