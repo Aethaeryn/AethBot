@@ -12,7 +12,7 @@
 import irclib, yaml
 
 # Handles the AethBot modules.
-from modules import core
+from aethbot import core
 
 # Handles the actual IRC bot, inherited from ircbot.py from the irclib package.
 # This file contains the bare minimum necessary to get it to run. The fancier
