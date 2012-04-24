@@ -10,7 +10,7 @@ class BotCore:
     def __init__(self, bot, ops, chans, about):
         self.operators = set(ops)
         self.bot       = bot
-        self.math      = calc.Math("postfix")
+        self.math      = calc.Math()
         self.channels  = chans
         self.version   = about
 

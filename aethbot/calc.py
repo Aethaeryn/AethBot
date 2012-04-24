@@ -2,19 +2,6 @@
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
 class Math:
-    def __init__(self, mode):
-        self.mode   = mode
-        self.switch_mode(self.mode)
-
-    def switch_mode(self, mode):
-        self.mode = mode
-        if mode == "postfix":
-            self.math = PostfixMath()
-
-    def command(self, command):
-        return self.math.command(command)
-
-class PostfixMath:
     def __init__(self):
         self.stack   = []
         self.symbols = set(["+", "-", "*", "/", "%", "**", "^",
@@ -121,7 +108,7 @@ class PostfixMath:
 
 # For debug purposes, the module can be run directly in a limited interpreter environment.
 def main():
-    math = Math("postfix")
+    math = Math()
     run  = "list"
 
     while (run.upper() != "Q"):
