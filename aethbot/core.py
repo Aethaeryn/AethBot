@@ -29,16 +29,16 @@ class BotCore:
 
     # Sends and records a message to a user or channel.
     def outmsg(self, server, target, msg):
-        self.record("<%s> %s" % (server.get_nickname(), msg), target)
+        self.record('<%s> %s' % (server.get_nickname(), msg), target)
         server.privmsg(target, msg)
 
     # Obtains the time for logging purposes.
     def time(self):
-        return strftime("%H:%M:%S")
+        return strftime('%H:%M:%S')
 
     # Obtains the date for logging purposes.
     def date(self):
-        return strftime("%Y %m %d")
+        return strftime('%Y %m %d')
 
     # Reloads all AethBot modules.
     def reload(self, connection, chan):
@@ -50,9 +50,9 @@ class BotCore:
     # Records a line in the log.
     def record(self, message, name):
         # Records logs in the log directory.
-        directory = "logs"
+        directory = 'logs'
 
-        if directory not in listdir("."):
+        if directory not in listdir('.'):
             mkdir(directory)
 
         # Prevents crash if name is not given.
@@ -63,7 +63,7 @@ class BotCore:
         # default log and then also in any channels the person who triggered
         # the event (such as a quit) is in.
         else:
-            name = "irc"
+            name = 'irc'
 
             for channel in self.bot.channels:
                 nick = message.split()[1]
@@ -72,15 +72,15 @@ class BotCore:
                     self.record(message, channel)
 
         # If there is no channel or nick, the name should be 'irc.log'
-        if name == "*":
-            name = "irc"
+        if name == '*':
+            name = 'irc'
 
         # Timestamp logs are the default behavior.
-        message = "%s %s" % (self.time(), message)
+        message = '%s %s' % (self.time(), message)
 
         # File i/o.
-        logfile = open("%s/%s.log" % (directory, name), "a")
-        logfile.writelines(message + "\n")
+        logfile = open('%s/%s.log' % (directory, name), 'a')
+        logfile.writelines(message + '\n')
         logfile.close()
 
     # Every notable and recorded IRC event except for messsages is handled here.
