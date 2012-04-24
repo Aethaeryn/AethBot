@@ -1,14 +1,9 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-# Default Python modules.
-import time, string, os
-
-# python-irclib modules.
+import time, os
 import irclib
-
-# Other modules in this folder.
-import calc, commands, events
+from aethbot import calc, commands, events
 
 # Handles the core module to the IRC bot and calls all other custom modules.
 class BotCore:

@@ -1,11 +1,8 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-# python-irclib modules.
 import irclib
-
-# Other modules in this folder.
-import commands
+from aethbot import commands
 
 class Event():
     def __init__(self, core, c, e):

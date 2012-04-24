@@ -1,10 +1,7 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-# Default Python modules.
 import math, string
-
-# python-irclib modules.
 import irclib
 
 class Math:
@@ -130,7 +127,7 @@ def main():
     math = Math("postfix")
     run  = "list"
 
-    while (string.upper(run) != "Q"):
+    while (run.upper() != "Q"):
         print math.command(run)
         run  = raw_input("> ")
 

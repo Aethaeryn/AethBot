@@ -1,11 +1,8 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-# Default Python modules
 import string, sys
 from time import sleep
-
-# python-irclib modules.
 import irclib
 
 # Handles all messages. The ones that are commands are then treated appropriately.
