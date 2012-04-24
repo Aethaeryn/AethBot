@@ -27,7 +27,8 @@ class AethBot(SimpleIRCClient):
         bot = config['Connection']
 
         SimpleIRCClient.__init__(self)
-        self.connect(bot['server'], bot['port'], bot['nick'], bot['pw'], bot['name'])
+        self.connect(bot['server'], bot['port'], bot['nick'],
+                     bot['pw'], bot['name'])
 
         self.ops   = bot['ops']
         self.chans = bot['chans']
@@ -93,7 +94,8 @@ class AethBot(SimpleIRCClient):
         try:
             reload(core)
             self.core = core.BotCore(self, self.ops, self.chans, self.about)
-            self.core.outmsg(connection, target, 'All modules have been reloaded.')
+            self.core.outmsg(connection, target,
+                             'All modules have been reloaded.')
 
         except:
             self.core.outmsg(connection, target, 'Error in reloading modules.')

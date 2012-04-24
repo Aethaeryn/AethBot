@@ -76,11 +76,13 @@ class Command():
         '''
         # Displays a help string.
         if self.msg_args[0] == 'help':
-            self.speak('I am AethBot, a basic IRC bot created in Python by Aethaeryn. For commands you can use, say "commands".')
+            self.speak('I am AethBot, a basic IRC bot created in Python by Aethaeryn. '\
+                           'For commands you can use, say "commands".')
 
         # Lists public commands.
         elif self.msg_args[0] == 'commands':
-            commands = 'The following public commands are available: help commands time version ops'
+            commands = 'The following public commands are available: '\
+                'help commands time version ops'
 
             for word in self.calc_words:
                 commands += ' %s' % word
@@ -119,7 +121,8 @@ class Command():
         # syntax: , <destination> msg <message>
         elif len(self.msg_args) > 1 and self.msg_args[1] == 'msg':
             pos = self.msg.find(self.msg_args[1])
-            self.core.outmsg(self.connection, self.msg_args[0], self.msg[(pos + len(self.msg_args[1]) + 1):])
+            self.core.outmsg(self.connection, self.msg_args[0],
+                             self.msg[(pos + len(self.msg_args[1]) + 1):])
 
         # Orders the bot to join a channel.
         elif self.msg_args[0] == 'join':
