@@ -46,12 +46,12 @@ class PostfixMath:
 
         elif element in self.symbols:
             if len(self.stack) >= 2:
-                a = self.stack.pop()
-                b = self.stack.pop()
+                first  = self.stack.pop()
+                second = self.stack.pop()
 
-                operation = str(b) + element + str(a)
+                operation = str(second) + element + str(first)
 
-                if element == "**" and (len(str(a)) > 2 or len(str(b)) > 2):
+                if element == "**" and (len(str(first)) > 2 or len(str(second)) > 2):
                     return "Error: Both numbers can only be two digits or less in an exponential operation"
 
                 try:
@@ -107,15 +107,15 @@ class PostfixMath:
             for element in elements:
                 outputs.append(self.push(element))
 
-            outputStrings = ""
+            output_strings = ""
 
             for output in outputs:
                 if output.find("cleared") != -1 or output.find("Result:") != -1 or output.find("Error:") != -1 or output.find("Items on stack") != -1:
-                    outputStrings += output
-                    outputStrings += "; "
+                    output_strings += output
+                    output_strings += "; "
 
-            if len(outputStrings) > 0:
-                return outputStrings
+            if len(output_strings) > 0:
+                return output_strings
 
             return "Items pushed onto stack"
 

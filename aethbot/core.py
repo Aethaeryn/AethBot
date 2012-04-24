@@ -15,17 +15,17 @@ class BotCore:
         self.version   = about
 
     # This is the default behavior for when identified.
-    def identified(self, c):
+    def identified(self, connection):
         for channel in self.channels:
-            self.join(c, channel)
+            self.join(connection, channel)
 
     # Tries to join a channel.
-    def join(self, c, chan):
-        c.join(chan)
+    def join(self, connection, chan):
+        connection.join(chan)
 
     # Tries to parts a channel.
-    def part(self, c, chan, msg=''):
-        c.part(chan, msg)
+    def part(self, connection, chan, msg=''):
+        connection.part(chan, msg)
 
     # Sends and records a message to a user or channel.
     def outmsg(self, server, target, msg):
@@ -41,11 +41,11 @@ class BotCore:
         return strftime("%Y %m %d")
 
     # Reloads all AethBot modules.
-    def reload(self, c, e, chan):
+    def reload(self, connection, chan):
         reload(calc)
         reload(commands)
         reload(events)
-        self.bot.reload_core(c, e, chan)
+        self.bot.reload_core(connection, chan)
 
     # Records a line in the log.
     def record(self, message, name):
@@ -85,9 +85,9 @@ class BotCore:
 
     # Every notable and recorded IRC event except for messsages is handled here.
     # The event recording is designed to mimic the default irssi style.
-    def handle_event(self, c, e):
-        self.ev = events.Event(self, c, e)
+    def handle_event(self, connection, event):
+        self.event = events.Event(self, connection, event)
 
     # Because messages can be commands, they're handled specially.
-    def commands(self, c, e):
-        commands.Command(self, c, e)
+    def commands(self, connection, event):
+        commands.Command(self, connection, event)

@@ -27,45 +27,45 @@ class AethBot(SimpleIRCClient):
         SimpleIRCClient.start(self)
 
     # ** Reads various events, sending them to core.py to be handled. ** #
-    def on_privmsg(self, c, e):
-        self.core.commands(c, e)
+    def on_privmsg(self, connection, event):
+        self.core.commands(connection, event)
 
-    def on_pubmsg(self, c, e):
-        self.core.commands(c, e)
+    def on_pubmsg(self, connection, event):
+        self.core.commands(connection, event)
 
-    def on_privnotice(self, c, e):
-        self.core.handle_event(c, e)
+    def on_privnotice(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_pubnotice(self, c, e):
-        self.core.handle_event(c, e)
+    def on_pubnotice(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_join(self, c, e):
-        self.core.handle_event(c, e)
+    def on_join(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_part(self, c, e):
-        self.core.handle_event(c, e)
+    def on_part(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_quit(self, c, e):
-        self.core.handle_event(c, e)
+    def on_quit(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_kick(self, c, e):
-        self.core.handle_event(c, e)
+    def on_kick(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_mode(self, c, e):
-        self.core.handle_event(c, e)
+    def on_mode(self, connection, event):
+        self.core.handle_event(connection, event)
 
-    def on_ctcp(self, c, e):
-        self.core.handle_event(c, e)
+    def on_ctcp(self, connection, event):
+        self.core.handle_event(connection, event)
 
     def get_version(self):
         return self.core.version
 
     # Reloads the core.py if the new code isn't buggy.
-    def reload_core(self, c, e, target):
+    def reload_core(self, connection, target):
         try:
             reload(core)
             self.core = core.BotCore(self, self.ops, self.chans, self.about)
-            self.core.outmsg(c, target, "All modules have been reloaded.")
+            self.core.outmsg(connection, target, "All modules have been reloaded.")
 
         except:
-            self.core.outmsg(c, target, "Error in reloading modules.")
+            self.core.outmsg(connection, target, "Error in reloading modules.")

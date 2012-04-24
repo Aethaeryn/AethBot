@@ -2,25 +2,26 @@
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
 import sys
-from time import sleep
 import irclib
 
 # Handles all messages. The ones that are commands are then treated appropriately.
 class Command():
-    def __init__(self, core, c, e):
-        # Reads in all the relevant information for the commands.
-        self.core     = core
-        self.c        = c
-        self.e        = e
-        self.me       = self.c.get_nickname()
+    def __init__(self, core, connection, event):
+        self.calc_words = set(["~", "calc", "math"])
 
-        self.msg      = self.e.arguments()[0]
-        self.msg_args = self.msg.split()
-        self.sender   = irclib.nm_to_n(self.e.source())
-        self.chan     = self.e.target()
+        # Reads in all the relevant information for the commands.
+        self.core       = core
+        self.connection = connection
+        self.event      = event
+        self.me         = self.connection.get_nickname()
+
+        self.msg        = self.event.arguments()[0]
+        self.msg_args   = self.msg.split()
+        self.sender     = irclib.nm_to_n(self.event.source())
+        self.chan       = self.event.target()
 
         # If the target of the message has the bot's name, it was a query.
-        if irclib.nm_to_n(self.chan) == self.c.get_nickname():
+        if irclib.nm_to_n(self.chan) == self.connection.get_nickname():
             self.chan = self.sender
 
         # Records the messages themselves.
@@ -42,8 +43,6 @@ class Command():
 
     # Determines what kind of command it is and sends it to the right location.
     def commands(self):
-        self.calc_words = set(["~", "calc", "math"])
-
         # Handles the core commands.
         if self.msg_args[0] == "," and len(self.msg_args) > 1 and self.sender in self.core.operators:
             self.msg_args.pop(0)
@@ -109,12 +108,12 @@ class Command():
         # syntax: , <destination> msg <message>
         elif len(self.msg_args) > 1 and self.msg_args[1] == "msg":
             pos = self.msg.find(self.msg_args[1])
-            self.core.outmsg(self.c, self.msg_args[0], self.msg[(pos + len(self.msg_args[1]) + 1):])
+            self.core.outmsg(self.connection, self.msg_args[0], self.msg[(pos + len(self.msg_args[1]) + 1):])
 
         # Orders the bot to join a channel.
         elif self.msg_args[0] == "join":
             if len(self.msg_args) == 2:
-                self.core.join(self.c, self.msg_args[1])
+                self.core.join(self.connection, self.msg_args[1])
 
             else:
                 self.speak("I need to be given a channel to join!")
@@ -122,7 +121,7 @@ class Command():
         # Orders the bot to part a channel.
         elif self.msg_args[0] == "part":
             if len(self.msg_args) == 2:
-                self.core.part(self.c, self.msg_args[1])
+                self.core.part(self.connection, self.msg_args[1])
 
             else:
                 self.speak("I need to be given a channel to leave!")
@@ -130,7 +129,7 @@ class Command():
         # Reloads this module without restarting the bot.
         # syntax: , reload
         elif self.msg_args[0] == "reload":
-            self.core.reload(self.c, self.e, self.chan)
+            self.core.reload(self.connection, self.chan)
 
         # Orders the bot to quit from IRC.
         # syntax: , quit
@@ -144,4 +143,4 @@ class Command():
 
     # This is how the bot speaks.
     def speak(self, msg):
-        self.core.outmsg(self.c, self.chan, msg)
+        self.core.outmsg(self.connection, self.chan, msg)
