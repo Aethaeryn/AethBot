@@ -22,6 +22,8 @@ class AethBot(irclib.SimpleIRCClient):
         self.about = bot["about"]
 
         self.core   = core.BotCore(self, self.ops, self.chans, self.about)
+
+    def start(self):
         irclib.SimpleIRCClient.start(self)
 
     # ** Reads various events, sending them to core.py to be handled. ** #
