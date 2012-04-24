@@ -1,15 +1,21 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
+'''This handles all of the messages that AethBot receives.
+'''
 import sys
 import irclib
 
-# Handles all messages. The ones that are commands are then treated appropriately.
 class Command():
+    '''This handles all of the messages. The messages that are also
+    commands are then treated appropriately.
+    '''
     def __init__(self, core, connection, event):
+        '''Logs messages, handles common information, and then calls
+        the appropriate method if it detects a command.
+        '''
         self.calc_words = set(['~', 'calc', 'math'])
 
-        # Reads in all the relevant information for the commands.
         self.core       = core
         self.connection = connection
         self.event      = event
@@ -41,8 +47,10 @@ class Command():
         elif self.chan == self.sender:
             self.commands()
 
-    # Determines what kind of command it is and sends it to the right location.
     def commands(self):
+        '''Determines what kind of command it is and sends it to the
+        right location.
+        '''
         # Handles the core commands.
         if self.msg_args[0] == ',' and len(self.msg_args) > 1 and self.sender in self.core.operators:
             self.msg_args.pop(0)
@@ -62,8 +70,10 @@ class Command():
         else:
             self.public_commands()
 
-    # These are harmless, public commands that anyone can use.
     def public_commands(self):
+        '''These are harmless, public commands that anyone is allowed
+        to use with the bot.
+        '''
         # Displays a help string.
         if self.msg_args[0] == 'help':
             self.speak('I am AethBot, a basic IRC bot created in Python by Aethaeryn. For commands you can use, say "commands".')
@@ -96,8 +106,9 @@ class Command():
 
             self.speak('My current local time is %s' % time)
 
-    # The main commands, not part of another module, are handled here.
     def core_commands(self):
+        '''The main commands, not part of another module, are handled here.
+        '''
         # Sends a message in the current channel or query.
         # syntax: , msg <message>
         if self.msg_args[0] == 'msg':
@@ -141,6 +152,7 @@ class Command():
         else:
             self.speak('I\'m sorry, I don\'t know that command.')
 
-    # This is how the bot speaks.
     def speak(self, msg):
+        '''This is how the bot speaks.
+        '''
         self.core.outmsg(self.connection, self.chan, msg)

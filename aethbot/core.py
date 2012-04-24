@@ -1,12 +1,18 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
+'''This core file acts as an intermediate step between the basic bot
+defined in __init__.py and the advanced features that are handled in
+individual, modular files.
+'''
 from time import strftime
 from os import mkdir, listdir
 from aethbot import calc, commands, events
 
-# Handles the core module to the IRC bot and calls all other custom modules.
 class BotCore:
+    '''This core module interfaces directly with the IRC bot and calls
+    all of the custom modules.
+    '''
     def __init__(self, bot, ops, chans, about):
         self.operators = set(ops)
         self.bot       = bot
@@ -14,57 +20,63 @@ class BotCore:
         self.channels  = chans
         self.version   = about
 
-    # This is the default behavior for when identified.
     def identified(self, connection):
+        '''Once the bot is identified, it does this action.'''
         for channel in self.channels:
             self.join(connection, channel)
 
-    # Tries to join a channel.
     def join(self, connection, chan):
+        '''This is how AethBot tries to join a channel.'''
         connection.join(chan)
 
-    # Tries to parts a channel.
     def part(self, connection, chan, msg=''):
+        '''This is how AethBot tries to part a channel.'''
         connection.part(chan, msg)
 
-    # Sends and records a message to a user or channel.
     def outmsg(self, server, target, msg):
+        '''This gets AethBot to send and record messages to a user or
+        a channel.
+        '''
         self.record('<%s> %s' % (server.get_nickname(), msg), target)
         server.privmsg(target, msg)
 
-    # Obtains the time for logging purposes.
     def time(self):
+        '''Obtains the time for the logs.'''
         return strftime('%H:%M:%S')
 
-    # Obtains the date for logging purposes.
     def date(self):
+        '''Obtains the date for the logs.'''
         return strftime('%Y %m %d')
 
-    # Reloads all AethBot modules.
     def reload(self, connection, chan):
+        '''Reloads all of the AethBot modules.'''
         reload(calc)
         reload(commands)
         reload(events)
         self.bot.reload_core(connection, chan)
 
-    # Records a line in the log.
+
     def record(self, message, name):
-        # Records logs in the log directory.
+        '''Records a line in a log file. If no name (i.e. the location
+        of events) is given, then the log that is used is the default
+        log. It also logs to as any channels that the person who
+        triggered the event is or was located in. This is used for
+        actions such as quitting.
+        '''
         directory = 'logs'
 
         if directory not in listdir('.'):
             mkdir(directory)
 
-        # Prevents crash if name is not given.
         if name:
             name = name.lower()
 
-        # If no name (i.e. location of events) is given, it's logged in the
-        # default log and then also in any channels the person who triggered
-        # the event (such as a quit) is in.
         else:
             name = 'irc'
 
+            #### TODO: This has been broken ever since the switch from
+            #### ircbot to irclib. This causes the bot to crash when,
+            #### for instance, someone quits.
             for channel in self.bot.channels:
                 nick = message.split()[1]
 
@@ -75,19 +87,21 @@ class BotCore:
         if name == '*':
             name = 'irc'
 
-        # Timestamp logs are the default behavior.
+        # Handles the timestamps.
         message = '%s %s' % (self.time(), message)
 
-        # File i/o.
         logfile = open('%s/%s.log' % (directory, name), 'a')
         logfile.writelines(message + '\n')
         logfile.close()
 
-    # Every notable and recorded IRC event except for messsages is handled here.
-    # The event recording is designed to mimic the default irssi style.
     def handle_event(self, connection, event):
-        self.event = events.Event(self, connection, event)
+        '''Every notable and recorded IRC event except for messages is
+        handled here.
+        '''
+        events.Event(self, connection, event)
 
-    # Because messages can be commands, they're handled specially.
     def commands(self, connection, event):
+        '''Messages are handled separately because they may or may not
+        be commands for AethBot.
+        '''
         commands.Command(self, connection, event)

@@ -1,13 +1,25 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
+'''This is a postfix (RPN) calculator module for AethBot.
+'''
+
 class Math:
+    '''Sets up a basic postfix (RPN) calculator that uses stacks to do
+    computations that are then returned to the bot.
+    '''
     def __init__(self):
+        '''Sets up the calculator.
+        '''
         self.stack   = []
         self.symbols = set(['+', '-', '*', '/', '%', '**', '^',
                             '=', 'pop', 'clear', 'list'])
 
     def push(self, element):
+        '''Pushes an item onto the top of the stack unless the element
+        being pushed is a special command. In that case, some sort of
+        action is taken, depending on the command.
+        '''
         if element not in self.symbols:
             self.stack.append(element)
             return 'Item pushed onto stack'
@@ -51,6 +63,8 @@ class Math:
                 return 'Error: Attempted operation requires at least two elements on stack'
 
     def pop(self):
+        '''Pops the top item from the stack and reveals what it is.
+        '''
         if len(self.stack) > 0:
             removed = self.stack.pop()
             return 'Result: %s' % removed
@@ -58,21 +72,21 @@ class Math:
             return 'Error: Empty stack'
 
     def command(self, command):
+        '''Takes in a calculator command and returns a result to be
+        printed by the bot. They must be a recognized symbol, an
+        equivalent to that symbol, or a number.
+        '''
         elements = command.split()
 
-        # These symbols are handled as 'pop' by the system.
         pop_synonyms = set(['=', 'p'])
 
-        # Handles the elements to be added to the stack.
         for i in range(len(elements)):
             if elements[i] in pop_synonyms:
                 elements[i] = 'pop'
 
-            # The common exponent sign is converted to the Python form.
             elif elements[i] == '^':
                 elements[i] = '**'
 
-            # Tries to turn them into integers. Otherwise, they are variables.
             if elements[i] not in self.symbols:
                 try:
                     elements[i] = int(elements[i])
@@ -106,8 +120,11 @@ class Math:
 
             return 'Items pushed onto stack'
 
-# For debug purposes, the module can be run directly in a limited interpreter environment.
 def main():
+    '''Creates a limited interpreter environment so that this module
+    can be run and tested directly instead of requiring the entire bot
+    to be run.
+    '''
     math = Math()
     run  = 'list'
 
