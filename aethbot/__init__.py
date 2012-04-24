@@ -2,18 +2,18 @@
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
 from aethbot import core
-import irclib
+from irclib import SimpleIRCClient
 
 # Handles the actual IRC bot, inherited from ircbot.py from the irclib package.
 # This file contains the bare minimum necessary to get it to run. The fancier
 # features are handled in individual modules, centered around core.py, so that
 # they can be reloaded while the bot is still running.
-class AethBot(irclib.SimpleIRCClient):
+class AethBot(SimpleIRCClient):
     def __init__(self, config):
         # Instantiates from ircbot.py
         bot = config["Connection"]
 
-        irclib.SimpleIRCClient.__init__(self)
+        SimpleIRCClient.__init__(self)
         self.connect(bot["server"], bot["port"], bot["nick"], bot["pw"], bot["name"])
 
         # Sets up the core.py main bot code.
@@ -24,7 +24,7 @@ class AethBot(irclib.SimpleIRCClient):
         self.core   = core.BotCore(self, self.ops, self.chans, self.about)
 
     def start(self):
-        irclib.SimpleIRCClient.start(self)
+        SimpleIRCClient.start(self)
 
     # ** Reads various events, sending them to core.py to be handled. ** #
     def on_privmsg(self, c, e):

@@ -1,9 +1,6 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-import math, string
-import irclib
-
 class Math:
     def __init__(self, mode):
         self.mode   = mode
@@ -113,7 +110,7 @@ class PostfixMath:
             outputStrings = ""
 
             for output in outputs:
-                if string.find(output, "cleared") != -1 or string.find(output, "Result:") != -1 or string.find(output, "Error:") != -1 or string.find(output, "Items on stack") != -1:
+                if output.find("cleared") != -1 or output.find("Result:") != -1 or output.find("Error:") != -1 or output.find("Items on stack") != -1:
                     outputStrings += output
                     outputStrings += "; "
 

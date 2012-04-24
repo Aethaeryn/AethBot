@@ -2,19 +2,19 @@
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
 from aethbot import AethBot
-import yaml
+from yaml import load
 
 # Loads the configuration file
 def load_config():
     # Loads the defaults.
     default_file = open('default.yml', 'r')
-    default      = yaml.load(default_file)
+    default      = load(default_file)
     default_file.close()         
 
     # Loads the custom options, if they exist.
     try:
-        config_file  = open('config.yml', 'r')
-        config       = yaml.load(config_file)
+        config_file = open('config.yml', 'r')
+        config      = load(config_file)
         config_file.close()
 
     except IOError:

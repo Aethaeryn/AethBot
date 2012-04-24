@@ -1,7 +1,7 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-import string, sys
+import sys
 from time import sleep
 import irclib
 
@@ -53,7 +53,7 @@ class Command():
  
         # Hands the math over to calc.py
         elif self.msg_args[0] in self.calc_words:
-            pos = string.find(self.msg, self.msg_args[0])
+            pos = self.msg.find(self.msg_args[0])
             self.speak(self.core.math.command(self.msg[(pos + len(self.msg_args[0]) + 1):]))
 
         # Using the restricted prefix without being an operator gives an error.
@@ -102,13 +102,13 @@ class Command():
         # Sends a message in the current channel or query.
         # syntax: , msg <message>
         if self.msg_args[0] == "msg":
-            pos = string.find(self.msg, self.msg_args[0])
+            pos = self.msg.find(self.msg_args[0])
             self.speak(self.msg[(pos + len(self.msg_args[0]) + 1):])
 
         # Sends a message to a given destination.
         # syntax: , <destination> msg <message>
         elif len(self.msg_args) > 1 and self.msg_args[1] == "msg":
-            pos = string.find(self.msg, self.msg_args[1])
+            pos = self.msg.find(self.msg_args[1])
             self.core.outmsg(self.c, self.msg_args[0], self.msg[(pos + len(self.msg_args[1]) + 1):])
 
         # Orders the bot to join a channel.

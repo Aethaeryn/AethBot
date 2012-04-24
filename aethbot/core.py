@@ -1,8 +1,8 @@
 # Copyright (c) 2011, 2012 Michael Babich
 # See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
 
-import time, os
-import irclib
+from time import strftime
+from os import mkdir, listdir
 from aethbot import calc, commands, events
 
 # Handles the core module to the IRC bot and calls all other custom modules.
@@ -34,11 +34,11 @@ class BotCore:
 
     # Obtains the time for logging purposes.
     def time(self):
-        return time.strftime("%H:%M:%S")
+        return strftime("%H:%M:%S")
 
     # Obtains the date for logging purposes.
     def date(self):
-        return time.strftime("%Y %m %d")
+        return strftime("%Y %m %d")
 
     # Reloads all AethBot modules.
     def reload(self, c, e, chan):
@@ -52,8 +52,8 @@ class BotCore:
         # Records logs in the log directory.
         directory = "logs"
 
-        if directory not in os.listdir("."):
-            os.mkdir(directory)
+        if directory not in listdir("."):
+            mkdir(directory)
 
         # Prevents crash if name is not given.
         if name:
