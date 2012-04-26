@@ -1,5 +1,5 @@
 # Copyright (c) 2011, 2012 Michael Babich
-# See LICENSE.txt or http://www.opensource.org/licenses/mit-license.php
+# See LICENSE.txt or http://opensource.org/licenses/MIT
 
 '''This directly launches AethBot and reads in configuration values
 from default.yml or config.yml if the latter exists.
