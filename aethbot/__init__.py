@@ -83,11 +83,6 @@ class AethBot(SimpleIRCClient):
         '''Sends CTCP to the core to be handled there.'''
         self.core.handle_event(connection, event)
 
-    def get_version(self):
-        '''Gets the version number.'''
-        #### TODO: Check to see if this is still used anywhere.
-        return self.core.version
-
     def reload_core(self, connection, target):
         '''Reloads core.py unless there is some bug in the new code.
         '''

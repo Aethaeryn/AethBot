@@ -1,7 +1,8 @@
-AethBot.py
+AethBot
  * Allow Freenode SSL
- * Add a basic editor for operators.
+ * Add a basic editor (ed) for operators.
  * Replace all the features that are now missing that were in ircbot.py
+ * Make the path of logs, configs, etc., independent of the directory from which the program is called.
 
 core.py
  * Replace self.bot.channels, mentioned in BotCore.record()
