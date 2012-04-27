@@ -12,8 +12,8 @@ class Math:
         '''Sets up the calculator.
         '''
         self.stack   = []
-        self.symbols = set(['+', '-', '*', '/', '%', '**', '^',
-                            '=', 'pop', 'clear', 'list'])
+        self.symbols = set(['+', '-', '*', '/', '%', '**',
+                            'pop', 'clear', 'list', 'sum'])
 
     def push(self, element):
         '''Pushes an item onto the top of the stack unless the element
@@ -42,6 +42,9 @@ class Math:
                 stack += 'None '
 
             return stack[:-1]
+
+        elif element == 'sum':
+            return self.push(sum(self.stack))
 
         elif element in self.symbols:
             if len(self.stack) >= 2:
