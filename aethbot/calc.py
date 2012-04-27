@@ -74,6 +74,19 @@ class Math:
         else:
             return 'Error: Empty stack'
 
+    def substitute(self, element):
+        '''If a substitute can be made, it is made.
+        '''
+        pop_synonyms = set(['=', 'p'])
+
+        if element in pop_synonyms:
+            return 'pop'
+
+        elif element == '^':
+            return '**'
+
+        return element
+
     def command(self, command):
         '''Takes in a calculator command and returns a result to be
         printed by the bot. They must be a recognized symbol, an
@@ -81,26 +94,18 @@ class Math:
         '''
         elements = command.split()
 
-        pop_synonyms = set(['=', 'p'])
-
         for i in range(len(elements)):
-            if elements[i] in pop_synonyms:
-                elements[i] = 'pop'
-
-            elif elements[i] == '^':
-                elements[i] = '**'
-
             if elements[i] not in self.symbols:
                 try:
                     elements[i] = int(elements[i])
                 except:
                     return 'Error: You can only input numbers or symbols'
 
+            else:
+                elements[i] = self.substitute(elements[i])
+
         if len(elements) == 0:
             return 'Error: You need to provide at least one element'
-
-        elif len(elements) == 1 and elements[0] == 'pop':
-            return self.pop()
 
         elif len(elements) == 1:
             return self.push(elements[0])
