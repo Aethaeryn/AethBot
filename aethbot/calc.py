@@ -13,7 +13,8 @@ class Math:
         '''
         self.stack   = []
         self.symbols = set(['+', '-', '*', '/', '%', '**',
-                            'pop', 'clear', 'list', 'sum'])
+                            'pop', 'clear', 'list', 'sum',
+                            '=', 'p', '^'])
 
     def push(self, element):
         '''Pushes an item onto the top of the stack unless the element
@@ -22,29 +23,22 @@ class Math:
         '''
         if element not in self.symbols:
             self.stack.append(element)
-            return 'Item pushed onto stack'
+            return
 
         elif element == 'pop':
             return self.pop()
 
         elif element == 'clear':
             self.stack = []
-            return 'The stack has been cleared'
+            return
 
         elif element == 'list':
-            stack = 'Items on stack: '
-
-            for item in self.stack:
-                stack += str(item)
-                stack += ' '
-
-            if len(self.stack) == 0:
-                stack += 'None '
-
-            return stack[:-1]
+            return str(self.stack).translate(None, ',')
 
         elif element == 'sum':
-            return self.push(sum(self.stack))
+            stack_sum = sum(self.stack)
+            self.push('clear')
+            return self.push(stack_sum)
 
         elif element in self.symbols:
             if len(self.stack) >= 2:
@@ -69,8 +63,7 @@ class Math:
         '''Pops the top item from the stack and reveals what it is.
         '''
         if len(self.stack) > 0:
-            removed = self.stack.pop()
-            return 'Result: %s' % removed
+            return str(self.stack.pop())
         else:
             return 'Error: Empty stack'
 
@@ -119,14 +112,14 @@ class Math:
             output_strings = ''
 
             for output in outputs:
-                if output.find('cleared') != -1 or output.find('Result:') != -1 or output.find('Error:') != -1 or output.find('Items on stack') != -1:
+                if output:
                     output_strings += output
                     output_strings += '; '
 
             if len(output_strings) > 0:
                 return output_strings
 
-            return 'Items pushed onto stack'
+            return
 
 def main():
     '''Creates a limited interpreter environment so that this module
@@ -137,7 +130,11 @@ def main():
     run  = 'list'
 
     while (run.upper() != 'Q'):
-        print math.command(run)
+        result = math.command(run)
+
+        if result:
+            print result
+
         run  = raw_input('> ')
 
 if __name__ == '__main__':

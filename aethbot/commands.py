@@ -61,7 +61,10 @@ class Command():
         # Hands the math over to calc.py
         elif self.msg_args[0] in self.calc_words:
             pos = self.msg.find(self.msg_args[0])
-            self.speak(self.core.math.command(self.msg[(pos + len(self.msg_args[0]) + 1):]))
+            calc = self.core.math.command(self.msg[(pos + len(self.msg_args[0]) + 1):])
+
+            if calc:
+                self.speak(calc)
 
         # Using the restricted prefix without being an operator gives an error.
         elif self.msg_args[0] == ',':
