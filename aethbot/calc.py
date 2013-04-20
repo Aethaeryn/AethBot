@@ -12,9 +12,8 @@ class Math:
         '''Sets up the calculator.
         '''
         self.stack   = []
-        self.symbols = set(['+', '-', '*', '/', '%', '**',
-                            'pop', 'clear', 'list', 'sum',
-                            '=', 'p', '^'])
+        self.symbols = set(['+', '-', '*', '/', '%', 'exp',
+                            'clear', 'list', 'sum', '='])
 
     def push(self, element):
         '''Pushes an item onto the top of the stack unless the element
@@ -25,7 +24,7 @@ class Math:
             self.stack.append(element)
             return
 
-        elif element == 'pop':
+        elif element == '=':
             return self.pop()
 
         elif element == 'clear':
@@ -45,10 +44,13 @@ class Math:
                 first  = self.stack.pop()
                 second = self.stack.pop()
 
-                operation = str(second) + element + str(first)
+                if element == 'exp':
+                    if (len(str(first)) > 2 or len(str(second)) > 2):
+                        return 'Error: Both numbers can only be two digits or less in an exponential operation'
+                    else:
+                        element = "**"
 
-                if element == '**' and (len(str(first)) > 2 or len(str(second)) > 2):
-                    return 'Error: Both numbers can only be two digits or less in an exponential operation'
+                operation = str(second) + element + str(first)
 
                 try:
                     result = eval(operation)
@@ -67,19 +69,6 @@ class Math:
         else:
             return 'Error: Empty stack'
 
-    def substitute(self, element):
-        '''If a substitute can be made, it is made.
-        '''
-        pop_synonyms = set(['=', 'p'])
-
-        if element in pop_synonyms:
-            return 'pop'
-
-        elif element == '^':
-            return '**'
-
-        return element
-
     def command(self, command):
         '''Takes in a calculator command and returns a result to be
         printed by the bot. They must be a recognized symbol, an
@@ -94,14 +83,8 @@ class Math:
                 except:
                     return 'Error: You can only input numbers or symbols'
 
-            else:
-                elements[i] = self.substitute(elements[i])
-
         if len(elements) == 0:
             return 'Error: You need to provide at least one element'
-
-        elif len(elements) == 1:
-            return self.push(elements[0])
 
         else:
             outputs = []
